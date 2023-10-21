@@ -1,0 +1,2 @@
+#python pip packages
+numpy==1.25.2
