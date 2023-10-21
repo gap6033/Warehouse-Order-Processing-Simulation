@@ -46,13 +46,13 @@ Instructions for user:
 - Bring your terminal to the extracted "Folder" and run:
     "pip install -r requirements.txt" 
     This is to install the numpy==1.25.2 package.
--All the variables have been configured via config.py file
+- All the variables have been configured via config.py file
 - The program can be run from process.py file:
     - While terminal open in the extracted folder.
     - run "python process.py" command in the terminal
--The output would be three csv files:
+- The output would be three csv files:
     - "Process_report" - containing the time comparisons of two approaches
-    -"Robot_Report_Mode_1" - containing distance moved by robot in mode 1
-    -"Robot_Report_Mode_2" - containing distance moved by robot in mode 2
--Sample outputs have already been generated for the user. In case of a new run they would be overwritten.
+    - "Robot_Report_Mode_1" - containing distance moved by robot in mode 1
+    - "Robot_Report_Mode_2" - containing distance moved by robot in mode 2
+- Sample outputs have already been generated for the user. In case of a new run they would be overwritten.
 
