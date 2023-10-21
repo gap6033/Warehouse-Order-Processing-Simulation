@@ -1,6 +1,6 @@
 Assumptions and Limitations:
 - Simulating order processing in a warehouse.
-- Warehouse is in the form of 2d matrix of size L * @
+- Warehouse is in the form of 2d matrix of size L * W
 - There are 'x' pickup stations and y 'packing stations' all numbered between 1 to L * W (both inclusive)
 - Stations are connected to their immediate adjacent station in all four directions - up, down, left and right directions
 - The distance between two adjacent station is 1m
