@@ -15,19 +15,20 @@ Instructions for user:
 -Sample outputs have already been generated for the user. In case of a new run they would be overwritten.
 
 Assumptions and Limitations:
--There is no wait time assumed while picking item from "Storage Stations". Meaning two robots can pick item
+- Robots per warehouse is equal to max(order size) among all the generated orders.
+- There is no wait time assumed while picking item from "Storage Stations". Meaning two robots can pick item
 from the same station at the same time.
--In mode1, a single order is handled by one robot.
--In mode2, a single item is handled by one robot.
--In mode 1, the packing station is assumed to be free the moment an "order" is packed. Meaning if an order was packed at
+- In mode1, a single order is handled by one robot.
+- In mode2, a single item is handled by one robot.
+- In mode 1, the packing station is assumed to be free the moment an "order" is packed. Meaning if an order was packed at
 12:59:30, another robot can drop his order for packing at 12:59:30.
--In mode 2, the packing station is free the moment an "item" is packed.
--The robots speed and station distance is "1m/s" and "1m" respectively, for ease of calculation. If not one can create a
+- In mode 2, the packing station is free the moment an "item" is packed.
+- The robots speed and station distance is "1m/s" and "1m" respectively, for ease of calculation. If not one can create a
 function that incorporates T = D/S formula to calculate the time.
--Since all the edges from a station are of equal distance, a simple bfs approach was used. In case they were unequal, "Djikastra's
+- Since all the edges from a station are of equal distance, a simple bfs approach was used. In case they were unequal "Djikastra's
 Algorithm" would be the better approach.
--To keep the process short, instead of adding realistic time.sleep() to simulate a realistically busy robot and a stationt, 
-the wait time was divided by 100.
+- To keep the process short, instead of adding realistic time.sleep() to simulate a realistically busy robot and a stationt, 
+  the wait time was divided by 100.
 -Date is assumed to be 1900-01-01 as which is the default date provided by the datetime module.
 
 Functionalities:
