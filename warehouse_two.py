@@ -1,7 +1,7 @@
 
 import copy
 import csv
-from datetime import timedelta
+from datetime import timedelta, datetime
 from queue import Queue
 import time
 import threading
@@ -20,6 +20,9 @@ class WarehouseTwo(WarehouseDataBuilder):
         self.process_report = {}
 
     def add_item_to_queue(self):
+        '''
+        Picks item from the oldest order and adds it to self.item_queue for next free Robot to pick from
+        '''
         prev_order = None
         while self.generated_orders:
             curr_order: Order = self.generated_orders.pop()
@@ -32,23 +35,28 @@ class WarehouseTwo(WarehouseDataBuilder):
             prev_order = curr_order
 
     def process_item(self, robot: Robot):
+        '''
+        Picks item from the oldest order and adds it to self.item_queue for the provided Robot to pick from
+
+        :param robot (Robot): Robot picking up the item for delivering to packing stations for processing
+        '''
         while not self.item_queue.empty() or self.generated_orders:
             process_item = False
             with self.item_queue_lock:
                 if not self.item_queue.empty():
-                    item, item_generated_time , item_packing_station = self.item_queue.get()
+                    item, item_generated_time, item_packing_station = self.item_queue.get()
                     process_item = True
             if process_item:
                 item_process_start_time = max(robot.next_free_time, item_generated_time)
                 self.process_current_item(item_process_start_time, item_packing_station, item, robot)
             
         
-    def process_current_item(self, item_process_start_time, item_packing_station, item: Item, robot: Robot):
+    def process_current_item(self, item_process_start_time: datetime, item_packing_station, item: Item, robot: Robot):
         pickup_station_number = item.item_number
-        time_to_pick_items = robot.time_to_reach_destination(robot.curr_station, pickup_station_number, self.warehouse_map)
+        time_to_pick_items = robot.distance_to_reach_destination(robot.curr_station, pickup_station_number, self.warehouse_map)
         robot.curr_station = pickup_station_number
         
-        time_to_drop_to_packing_station = robot.time_to_reach_destination(robot.curr_station, item_packing_station, self.warehouse_map)
+        time_to_drop_to_packing_station = robot.distance_to_reach_destination(robot.curr_station, item_packing_station, self.warehouse_map)
         item_drop_time = item_process_start_time + timedelta(seconds=time_to_pick_items + time_to_drop_to_packing_station)
         robot.distance_moved += time_to_pick_items + time_to_drop_to_packing_station
         robot.curr_station = item_packing_station
@@ -76,6 +84,9 @@ class WarehouseTwo(WarehouseDataBuilder):
                 writer.writerow([robot.robot_number, robot.distance_moved])
 
     def activate_robots(self):
+        '''
+        Robots commence processing the order
+        '''
         robot_threads = [threading.Thread(target=self.process_item, args=(robot,)) for robot in self.robots]
 
         # Start the robot threads

@@ -49,7 +49,9 @@ class WarehouseDataBuilder:
     @staticmethod
     def build_matrix():
         '''
-        Build a 2d matrix representing warehouse of size l * w
+        Build a 2d matrix representing warehouse of size WAREHOUSE_ROWS * WAREHOUSE_COLS defined in config.py
+        Each cell of the matrix represents a station. The matrix is numbered row wise from left to right. The station 
+        numbers are 1-indexed and are identified using the number alloted to them.
         '''
         warehouse = []
         station_number = 1
@@ -90,7 +92,7 @@ class WarehouseDataBuilder:
     def generate_random_order_start_time():
         '''
         Generate Order with random order times following the mean time interval and time variance
-        restriction 
+        restriction as configured via config.py
         '''
         random_times = []
         current_time = ORDER_GENERATION_START_TIME
@@ -107,7 +109,8 @@ class WarehouseDataBuilder:
         '''
         Generate random order loads following load variance and load mean restriction for all randomly generated
         orders
-        :param total_orders: The total generated orders
+
+        :param total_orders (int): The total generated orders
         '''
         # Generate normally distributed numbers with mean=0 and std=1
         normal_values = np.random.normal(0, 1, total_orders)
@@ -127,7 +130,8 @@ class WarehouseDataBuilder:
     def build_pickup_stations_list(order_loads: list[int]):
         '''
         Add pickup stations to all the generated order loads
-        :param order_loads: Order sizes for all the randomly generated orders
+        
+        :param order_loads (list[int]): Order sizes for all the randomly generated orders
         '''
         pickup_station_list = []
         for i in range(len(order_loads)):
@@ -158,6 +162,7 @@ class WarehouseDataBuilder:
     def build_robot_availability_data(robot_count: int, curr_station: int, distance_moved: int) -> list[Robot]:
         '''
         Generate Robot Objects for all the robots at the warehouse
+
         :param robot_count: Number of robots in warehouse
         :param curr_station: Station at which the robot is docked
         :param distance moved: Distance Moved by robot.
@@ -179,8 +184,8 @@ class WarehouseDataBuilder:
     def add_locks_to_packing_station(self):
         '''
         Add packing station number and thread.locks as key-value pair to the initialized self.packing_station_locks
-        This is to avoid race conditions when two robots brind item to a station simultaneously, when the station is
-        free
+        This is to avoid race conditions when two robots bring item to a station simultaneously, when the station is
+        free.
         '''
         for station in PACKING_STATIONS:
             self.packing_station_locks[station] = Lock()
@@ -188,6 +193,8 @@ class WarehouseDataBuilder:
     def book_packing_station(self, packing_station_number: int):
         '''
         Aquire Packing Station for packing item brought over by a robot
+
+        :param packaging_station_number (int): The current packaging station
         '''
         start_time = time.time()
         with self.packing_station_locks[packing_station_number]:
@@ -201,6 +208,8 @@ class WarehouseDataBuilder:
     def free_packing_station(self, packing_station_number: int):
         '''
         Release Packing Station after it has finished packing for other robots to bring items
+
+        :param packaging_station_number (int): The current packaging station
         '''
         self.packing_stations.add(packing_station_number)
         

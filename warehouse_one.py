@@ -56,10 +56,10 @@ class WarehouseOne(WarehouseDataBuilder):
         item: Item
         for item in pickup_stations:
             pickup_station_number = item.item_number
-            time_to_pick_items += robot.time_to_reach_destination(robot.curr_station, pickup_station_number, self.warehouse_map)
+            time_to_pick_items += robot.distance_to_reach_destination(robot.curr_station, pickup_station_number, self.warehouse_map)
             robot.curr_station = pickup_station_number
         packing_station = order.packing_station
-        time_to_drop_to_packing_station = robot.time_to_reach_destination(robot.curr_station, packing_station, self.warehouse_map)
+        time_to_drop_to_packing_station = robot.distance_to_reach_destination(robot.curr_station, packing_station, self.warehouse_map)
         order_drop_time = order_process_start_time + timedelta(seconds=time_to_pick_items + time_to_drop_to_packing_station)
         robot.distance_moved += time_to_pick_items + time_to_drop_to_packing_station
         robot.curr_station = packing_station
